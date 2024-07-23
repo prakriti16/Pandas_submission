@@ -80,13 +80,13 @@ for train_index, val_index in kfold.split(df, df['encoded_class']):
     base_model.trainable = False
 
     # Add custom layers on top of the base model
-    model = tf.keras.models.Sequential([
-    base_model,
-    tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),  # Adding MaxPooling2D layer
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(512, activation='relu'),  # Increased number of units in Dense layer
-    tf.keras.layers.Dense(128, activation='relu'),  # Additional Dense layer for more complexity
-    tf.keras.layers.Dense(len(np.unique(train_labels)), activation='softmax')
+   model = tf.keras.models.Sequential([
+        base_model,
+        tf.keras.layers.GlobalAveragePooling2D(),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(64, activation='relu'),  # Additional dense layer
+        tf.keras.layers.Dropout(0.5),  # Dropout layer to prevent overfitting
+        tf.keras.layers.Dense(len(np.unique(train_labels)), activation='softmax')
     ])
 
 
