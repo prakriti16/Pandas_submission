@@ -84,8 +84,6 @@ for train_index, val_index in kfold.split(df, df['encoded_class']):
         base_model,
         tf.keras.layers.GlobalAveragePooling2D(),
         tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dense(64, activation='relu'),  # Additional dense layer
-        tf.keras.layers.Dropout(0.5),  # Dropout layer to prevent overfitting
         tf.keras.layers.Dense(len(np.unique(train_labels)), activation='softmax')
     ])
 
