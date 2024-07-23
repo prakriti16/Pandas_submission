@@ -1,4 +1,4 @@
-from tensorflow.keras.applications import VGG16, ResNet50, InceptionV3, EfficientNetB0
+from tensorflow.keras.applications import InceptionV3
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 import pandas as pd
