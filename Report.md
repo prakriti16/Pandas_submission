@@ -13,6 +13,17 @@ We tried popular image classification techniques like CNN and achieved an accura
   - Confusion Matrix:
     - Predictions on the validation set are made.
     - The confusion matrix is computed and displayed.
+  - Data Augmentation: We use ImageDataGenerator to apply random transformations to the images, increasing diversity and preventing overfitting.
+
+  - SMOTE Oversampling: We apply SMOTE to oversample the minority classes, making the dataset more balanced.
+
+  - Transfer Learning with Inception V3: We leverage a pre-trained VGG16 model for feature extraction and add custom layers for classification.
+
+  - Focal Loss: The model uses focal loss to focus on hard-to-classify examples and improve performance on minority classes.
+
+  - Early Stopping: We use early stopping to prevent overfitting by monitoring the validation loss.
+
+  - Evaluation with Metrics Beyond Accuracy: We evaluate the model using a classification report and ROC-AUC, which provide more insights into performance across classes.
 ## Data preprocessing
   - Data Preparation: The CSV is loaded, and labels are encoded. Images are loaded and normalized.
 ## Model Selection
