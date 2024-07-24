@@ -41,7 +41,7 @@ def load_images_from_dataframe(df, directory):
     return np.array(images), np.array(labels)
 
 # K-Fold Cross-Validation
-kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+kfold = StratifiedKFold(n_splits=4, shuffle=True, random_state=42)
 fold_no = 1
 all_val_accuracies = []
 
@@ -171,7 +171,7 @@ for img_path in test_image_paths:
 
 # Create a DataFrame from the results
 results_df = pd.DataFrame(results)
-output_csv_path = '/kaggle/input/outp123/Pandas_submission.csv'  # Change path if needed
+output_csv_path = '/kaggle/working/Pandas_submission.csv'  # Change path if needed
 # Save the results to a CSV file
 results_df.to_csv(output_csv_path, index=False)
 print(f'Predictions saved to {output_csv_path}')
@@ -191,7 +191,7 @@ label_counts = df['Class'].value_counts()
 print(label_counts * 100 / label_counts.sum())
 
 # Define the path to your CSV file
-csv_path = '/kaggle/input/outp123/Pandas_submission.csv'  # Adjust the path as needed
+csv_path = '/kaggle/working/Pandas_submission.csv'  # Adjust the path as needed
 
 # Load the CSV file
 df = pd.read_csv(csv_path)
