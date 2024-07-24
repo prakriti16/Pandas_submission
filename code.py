@@ -11,6 +11,8 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.utils.class_weight import compute_class_weight
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+from imblearn.over_sampling import SMOTE
+from sklearn.metrics import classification_report, roc_auc_score
 
 # Define paths
 data_dir = '/kaggle/input/dataauburn/train_dataset/train_dataset'
@@ -55,7 +57,13 @@ for train_index, val_index in kfold.split(df, df['encoded_class']):
     train_images = train_images / 255.0
     val_images = val_images / 255.0
 
-    # Calculate class weights
+    # Use SMOTE to balance the dataset
+    smote = SMOTE(random_state=42)
+    X_resampled, y_resampled = smote.fit_resample(train_images.reshape(train_images.shape[0], -1), train_labels)
+    train_images = X_resampled.reshape(-1, image_height, image_width, num_channels)
+    train_labels = y_resampled
+
+    # Calculate class weights (optional with SMOTE but might still be useful)
     class_weights = compute_class_weight('balanced', classes=np.unique(train_labels), y=train_labels)
     class_weights = dict(enumerate(class_weights))
 
@@ -83,13 +91,31 @@ for train_index, val_index in kfold.split(df, df['encoded_class']):
     model = tf.keras.models.Sequential([
         base_model,
         tf.keras.layers.GlobalAveragePooling2D(),
-        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dense(256, activation='relu'),  # Increased layer size for better feature extraction
+        tf.keras.layers.Dropout(0.5),  # Added dropout for regularization
         tf.keras.layers.Dense(len(np.unique(train_labels)), activation='softmax')
     ])
 
+    # Define Focal Loss function
+    def focal_loss(gamma=2.0, alpha=0.25):
+        def focal_loss_fixed(y_true, y_pred):
+            # Convert to logits
+            y_pred = tf.clip_by_value(y_pred, tf.keras.backend.epsilon(), 1. - tf.keras.backend.epsilon())
+            y_true = tf.cast(y_true, tf.int32)
+
+            # Convert y_true to one-hot encoding
+            y_true_one_hot = tf.one_hot(y_true, depth=tf.shape(y_pred)[-1])
+
+            # Calculate focal loss components
+            cross_entropy_loss = -y_true_one_hot * tf.math.log(y_pred)
+            loss = alpha * tf.pow((1 - y_pred), gamma) * cross_entropy_loss
+
+            return tf.reduce_mean(loss)
+
+        return focal_loss_fixed
 
     # Compile the model
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer='adam', loss=focal_loss(gamma=2.0, alpha=0.25), metrics=['accuracy'])
 
     # Define the early stopping callback
     early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
@@ -116,15 +142,19 @@ for train_index, val_index in kfold.split(df, df['encoded_class']):
     plt.title(f'Confusion Matrix for fold {fold_no}')
     plt.show()
 
+    # Classification report and ROC-AUC
+    print(classification_report(val_labels, val_predictions, target_names=label_encoder.classes_))
+    roc_auc = roc_auc_score(tf.keras.utils.to_categorical(val_labels), tf.keras.utils.to_categorical(val_predictions), multi_class='ovr')
+    print(f'AUC-ROC for fold {fold_no}: {roc_auc}')
+
     fold_no += 1
 
 print(f'Average validation accuracy across all folds: {np.mean(all_val_accuracies)}')
 
-test_dir ='/kaggle/input/dataauburn/test_dataset/test_dataset' #change depending on your kaggle directory structure.
-# Predict on test set
+# Test set predictions
+test_dir = '/kaggle/input/dataauburn/test_dataset/test_dataset'  # Adjust path as needed
 test_image_paths = [os.path.join(test_dir, img_name) for img_name in os.listdir(test_dir) if img_name.endswith('.jpg')]
 results = []
-results.append({'File Name': 'File Name', 'Class': 'Class'})
 
 def predict_image(model, img_path, label_encoder):
     img = image.load_img(img_path, target_size=(image_height, image_width))
@@ -141,12 +171,12 @@ for img_path in test_image_paths:
 
 # Create a DataFrame from the results
 results_df = pd.DataFrame(results)
-output_csv_path='/kaggle/input/outp123/Pandas_submission.csv'
+output_csv_path = '/kaggle/input/outp123/Pandas_submission.csv'  # Change path if needed
 # Save the results to a CSV file
 results_df.to_csv(output_csv_path, index=False)
 print(f'Predictions saved to {output_csv_path}')
 
-#Just to check the distribution given and predicted 
+# Just to check the distribution given and predicted
 
 # Define the path to your CSV file
 csv_path = '/kaggle/input/dataauburn/train.csv'  # Adjust the path as needed
@@ -158,7 +188,7 @@ df = pd.read_csv(csv_path)
 label_counts = df['Class'].value_counts()
 
 # Print the unique labels and their counts
-print(label_counts*100/label_counts.sum())
+print(label_counts * 100 / label_counts.sum())
 
 # Define the path to your CSV file
 csv_path = '/kaggle/input/outp123/Pandas_submission.csv'  # Adjust the path as needed
@@ -167,7 +197,7 @@ csv_path = '/kaggle/input/outp123/Pandas_submission.csv'  # Adjust the path as n
 df = pd.read_csv(csv_path)
 
 # Count the unique labels
-label_counts1 = df['Predicted Label'].value_counts()
+label_counts1 = df['Class'].value_counts()
 
 # Print the unique labels and their counts
-print(label_counts1*100/label_counts1.sum())
+print(label_counts1 * 100 / label_counts1.sum())
