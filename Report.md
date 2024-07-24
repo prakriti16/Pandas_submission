@@ -1,6 +1,6 @@
 # Report
 ## Approach 
-We tried popular image classification techniques like CNN and achieved an accuracy of around 0.7. Further we noticed the distribution of the data across different labels and realised that it is biased, thus we used k-fold cross validation, data augmentation, class weights and transfer learning to improve performance in terms of AUC-ROC to 0.93 and accuracy upto 0.85. 
+We tried popular image classification techniques like CNN and achieved an accuracy of around 0.7. Further we noticed the distribution of the data across different labels and realised that it is biased, thus we used k-fold cross validation, data augmentation, class weights, Focal Loss, SMOTE and transfer learning to improve performance in terms of AUC-ROC to 0.93 and accuracy upto 0.85. 
   - Imports and Paths: The necessary imports and file paths are defined.
   - Data Preparation: The CSV is loaded, and labels are encoded. Images are loaded and normalized.
   - K-Fold Cross-Validation: A stratified K-fold is set up to handle the cross-validation process.
