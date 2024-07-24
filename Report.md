@@ -96,4 +96,4 @@ Inception V3, developed by Google researchers, is a deep convolutional neural ne
 3. **EfficientNetB0**: Focuses on scaling and efficiency, often achieving better performance with fewer parameters compared to Inception V3.
 
 ## Summary
-Inception V3 is a powerful and versatile architecture for image classification and other computer vision tasks, known for its high accuracy and computational efficiency. Its use of inception modules and factorized convolutions makes it a robust choice for a wide range of applications, from academic research to industrial applications.
+Inception V3 is a powerful and versatile architecture for image classification and other computer vision tasks, known for its high accuracy and computational efficiency. Its use of inception modules and factorized convolutions makes it a robust choice for a wide range of applications, from academic research to industrial applications. We would have liked to use InceptionResNetV2 which combines Inception V4 and ResNet however it required more training time than we could afford.
