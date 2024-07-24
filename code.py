@@ -176,28 +176,3 @@ output_csv_path = '/kaggle/working/Pandas_submission.csv'  # Change path if need
 results_df.to_csv(output_csv_path, index=False)
 print(f'Predictions saved to {output_csv_path}')
 
-# Just to check the distribution given and predicted
-
-# Define the path to your CSV file
-csv_path = '/kaggle/input/dataauburn/train.csv'  # Adjust the path as needed
-
-# Load the CSV file
-df = pd.read_csv(csv_path)
-
-# Count the unique labels
-label_counts = df['Class'].value_counts()
-
-# Print the unique labels and their counts
-print(label_counts * 100 / label_counts.sum())
-
-# Define the path to your CSV file
-csv_path = '/kaggle/working/Pandas_submission.csv'  # Adjust the path as needed
-
-# Load the CSV file
-df = pd.read_csv(csv_path)
-
-# Count the unique labels
-label_counts1 = df['Class'].value_counts()
-
-# Print the unique labels and their counts
-print(label_counts1 * 100 / label_counts1.sum())
