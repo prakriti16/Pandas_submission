@@ -63,7 +63,7 @@ For each fold:
 ### Inception V3: Overview and Applications
 
 #### Overview
-InceptionResNetV2, developed by Google researchers, is an advanced deep convolutional neural network architecture that combines the strengths of Inception modules and Residual networks. Introduced in the paper "Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning"[https://arxiv.org/abs/1602.07261] in 2016, it is designed to achieve state-of-the-art performance on image recognition tasks by leveraging the power of both network-in-network layers and residual connections, enhancing learning efficiency and accuracy.
+InceptionResNetV2, developed by Google researchers, is an advanced deep convolutional neural network architecture that combines the strengths of Inception modules and Residual networks. Introduced in the paper https://arxiv.org/abs/1602.07261["Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning"] in 2016, it is designed to achieve state-of-the-art performance on image recognition tasks by leveraging the power of both network-in-network layers and residual connections, enhancing learning efficiency and accuracy.
 
 #### Key Features
 1. **Inception Modules**: Apply multiple convolutional filters of different sizes (1x1, 3x3, 5x5) in parallel to capture features at various scales.
